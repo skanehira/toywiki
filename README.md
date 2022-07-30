@@ -18,5 +18,15 @@ aws dynamodb delete-table --table-name wiki --endpoint-url http://localhost:8000
 
 ## Directory
 
+```sh
+.
+├── LICENSE
+├── README.md
+├── api # GraphQL API
+├── docker-compose.yaml
+├── dynamodb # dynamodb json data
+└── front # web front
+```
+
 ## Author
 skanehira
