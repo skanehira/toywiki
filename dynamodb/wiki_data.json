@@ -1,0 +1,67 @@
+{
+  "wiki": [
+    {
+      "PutRequest": {
+        "Item": {
+          "owner": {
+            "S": "skanehira"
+          },
+          "id": {
+            "S": "1"
+          },
+          "text": {
+            "S": "hoge"
+          },
+          "category": {
+            "S": "hoge"
+          },
+          "title": {
+            "S": "hoge title"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "owner": {
+            "S": "skanehira"
+          },
+          "id": {
+            "S": "2"
+          },
+          "text": {
+            "S": "fuga"
+          },
+          "category": {
+            "S": "fuga"
+          },
+          "title": {
+            "S": "hoge title"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "owner": {
+            "S": "gorilla"
+          },
+          "id": {
+            "S": "3"
+          },
+          "text": {
+            "S": "uho"
+          },
+          "category": {
+            "S": "hoge"
+          },
+          "title": {
+            "S": "hoge title"
+          }
+        }
+      }
+    }
+  ]
+}
