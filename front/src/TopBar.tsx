@@ -1,3 +1,4 @@
+import { memo } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -57,7 +58,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function DrawerAppBar(props: Props) {
+export const DrawerAppBar = memo((props: Props) => {
+  console.log("drawer app bar");
   return (
     <AppBar component="nav">
       <Toolbar>
@@ -81,4 +83,4 @@ export default function DrawerAppBar(props: Props) {
       </Toolbar>
     </AppBar>
   );
-}
+});
