@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 
 interface Props {
   title: string;
-  author: string;
+  owner: string;
   text: string;
 }
 
@@ -18,7 +18,7 @@ export default function WikiCard(props: Props) {
           {props.title}
         </Typography>
         <Typography sx={{ mb: 1 }} color="text.secondary">
-          {props.author}
+          {props.owner}
         </Typography>
         <Typography variant="body2">{props.text}</Typography>
       </CardContent>
