@@ -16,7 +16,12 @@ export const CardList = memo((props: Props) => {
     >
       {props.wikis.map((wiki) => (
         <Grid item xs={2} sm={4} md={4} key={wiki.id}>
-          <WikiCard title={wiki.title} owner={wiki.owner} text={wiki.text} />
+          <WikiCard
+            title={wiki.title}
+            owner={wiki.owner}
+            text={wiki.text}
+            id={wiki.id}
+          />
         </Grid>
       ))}
     </Grid>

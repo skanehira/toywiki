@@ -4,7 +4,9 @@ import Toolbar from "@mui/material/Toolbar";
 import { useCallback, useEffect, useState } from "react";
 import { CardList } from "./CardList";
 import { Wikis } from "./wiki";
+import { Edit } from "./Edit";
 import { InMemoryCache, ApolloClient, gql } from "@apollo/client";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 const client = new ApolloClient({
   uri: "http://localhost:8000/api",
@@ -63,15 +65,18 @@ function App() {
   }, []);
 
   return (
-    <>
-      <Box sx={{ display: "flex" }}>
-        <DrawerAppBar title="Toy Wiki" onChange={onChange} />
-        <Box component="main" sx={{ p: 3 }}>
-          <Toolbar />
-          <CardList wikis={wikis} />
-        </Box>
+    <Box sx={{ display: "flex" }}>
+      <DrawerAppBar title="Toy Wiki" onChange={onChange} />
+      <Box component="main" sx={{ p: 3 }}>
+        <Toolbar />
+        <Router>
+          <Routes>
+            <Route path="/" element={<CardList wikis={wikis} />} />
+            <Route path="/edit/:id" element={<Edit />} />
+          </Routes>
+        </Router>
       </Box>
-    </>
+    </Box>
   );
 }
 
