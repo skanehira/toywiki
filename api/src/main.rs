@@ -10,6 +10,7 @@ use axum::{
     Server,
 };
 use raiden::*;
+use tower_http::cors::{Any, CorsLayer};
 
 #[derive(Raiden, Debug)]
 #[raiden(table_name = "wiki")]
@@ -82,6 +83,23 @@ impl Query {
                 let mut wikis = Vec::<Wiki>::new();
                 for item in output.items {
                     wikis.push(item.into());
+                }
+                Ok(Some(wikis))
+            }
+            Err(e) => Err(e.into()),
+        }
+    }
+
+    async fn search<'ctx>(&self, ctx: &Context<'ctx>, term: String) -> Result<Option<Vec<Wiki>>> {
+        let dynamodb = ctx.data::<TableWikiClient>()?;
+        let result = dynamodb.scan().run().await;
+        match result {
+            Ok(output) => {
+                let mut wikis = Vec::<Wiki>::new();
+                for item in output.items {
+                    if item.title.contains(&term) || item.text.contains(&term) {
+                        wikis.push(item.into());
+                    }
                 }
                 Ok(Some(wikis))
             }
@@ -191,6 +209,12 @@ async fn playground() -> impl IntoResponse {
 
 #[tokio::main]
 async fn main() {
+    let origins = ["http://localhost:3000".parse().unwrap()];
+    let cors = CorsLayer::new()
+        .allow_methods(Any)
+        .allow_origin(origins)
+        .allow_headers(Any);
+
     let client = TableWiki::client(Region::Custom {
         name: "ap-northeast-1".into(),
         endpoint: "http://localhost:8001".into(),
@@ -201,8 +225,9 @@ async fn main() {
         .finish();
 
     let app = Router::new()
-        .route("/", get(playground).post(handler))
-        .layer(Extension(schema));
+        .route("/api", get(playground).post(handler))
+        .layer(Extension(schema))
+        .layer(cors);
     println!("servrer listen on 0.0.0.0:8000");
 
     Server::bind(&"0.0.0.0:8000".parse().unwrap())

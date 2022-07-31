@@ -59,7 +59,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const DrawerAppBar = memo((props: Props) => {
-  console.log("drawer app bar");
   return (
     <AppBar component="nav">
       <Toolbar>

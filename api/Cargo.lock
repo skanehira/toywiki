@@ -41,6 +41,7 @@ dependencies = [
  "axum",
  "raiden",
  "tokio",
+ "tower-http",
  "xid",
 ]
 

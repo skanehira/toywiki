@@ -1,38 +1,66 @@
 import { DrawerAppBar } from "./TopBar";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Toolbar from "@mui/material/Toolbar";
-import { memo, useCallback, useState } from "react";
-import WikiCard from "./Card";
+import { useCallback, useEffect, useState } from "react";
+import { CardList } from "./CardList";
+import { Wikis } from "./wiki";
+import { InMemoryCache, ApolloClient, gql } from "@apollo/client";
 
-let count = 0;
-
-const CardList = memo(() => {
-  return (
-    <Grid
-      container
-      spacing={{ xs: 2, md: 3 }}
-      columns={{ xs: 4, sm: 8, md: 12 }}
-    >
-      {Array.from(Array(100)).map((_, index) => (
-        <Grid item xs={2} sm={4} md={4} key={index}>
-          <WikiCard title="hoge" author="gorilla" text="hogehoge" />
-        </Grid>
-      ))}
-    </Grid>
-  );
+const client = new ApolloClient({
+  uri: "http://localhost:8000/api",
+  cache: new InMemoryCache(),
 });
 
+const fetchWikis = (setWiki: any) => {
+  const query = gql`
+    query GetWikis {
+      wiki(owner: "skanehira") {
+        id
+        title
+        text
+        category
+        owner
+      }
+    }
+  `;
+  client.query({ query: query }).then((resp: any) => {
+    setWiki(resp.data.wiki);
+  });
+};
+
+const searchWiki = (setWiki: any, term: string) => {
+  const query = gql`
+    query Search($term: String!) {
+      search(term: $term) {
+        id
+        title
+        text
+      }
+    }
+  `;
+
+  client
+    .query({ query: query, variables: { term: term } })
+    .then((resp: any) => {
+      setWiki(resp.data.search);
+    });
+};
+
 function App() {
-  const [term, setTerm] = useState("");
-  console.log(++count);
+  const [wikis, setWikis] = useState([] as Wikis);
 
   const onChange = useCallback(
-    (event: any) => {
-      setTerm(event.target.value);
+    (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      if (event.target.value) {
+        searchWiki(setWikis, event.target.value);
+      }
     },
-    [setTerm]
+    []
   );
+
+  useEffect(() => {
+    fetchWikis(setWikis);
+  }, []);
 
   return (
     <>
@@ -40,7 +68,7 @@ function App() {
         <DrawerAppBar title="Toy Wiki" onChange={onChange} />
         <Box component="main" sx={{ p: 3 }}>
           <Toolbar />
-          <CardList />
+          <CardList wikis={wikis} />
         </Box>
       </Box>
     </>
